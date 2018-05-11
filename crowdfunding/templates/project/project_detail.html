@@ -192,7 +192,7 @@
 						<div class="panel-body">
                             <p>配送费用：{% ifequal repay.freight 0%}包邮{% else %}￥{{ repay.repay_num }}{% endifequal %}</p>
                             <p>预计发放时间：项目筹款成功后的{{ repay.repay_time }}天内</p>
-                            <button type="button" class="btn  btn-warning btn-lg" onclick="window.location.href='pay-step-1.html'">支持</button>
+                            <button type="button" class="btn  btn-warning btn-lg" onclick="window.location.href='{% url 'order:createorder' repay_id=repay.id %}'">支持</button>
                             <br><br>
                             <p>{{ repay.repay_content }}</p>
 						</div>
@@ -275,7 +275,7 @@
             <h2 id="section-{{ forloop.counter }}" style="border-bottom:1px dashed #ddd;" ><span style="font-size:20px;font-weight:bold;">￥{{ repay.support_money }}</span><span style="font-size:12px;margin-left:60px;">{% ifequal repay.repay_num 0%}无限额{% else %}限额{{ repay.repay_num }}份{% endifequal %}，223位支持者</span></h2>
             <p>配送费用：{% ifequal repay.freight 0%}全国包邮{% else %}￥{{ repay.repay_num }}{% endifequal %}</p>
             <p>预计发放时间：项目筹款成功后的{{ repay.repay_time }}天内</p>
-            <button type="button" class="btn  btn-warning btn-lg " onclick="window.location.href='pay-step-1.html'">支持</button>
+            <button type="button" class="btn  btn-warning btn-lg " onclick="window.location.href='{% url 'order:createorder' repay_id=repay.id %}'">支持</button>
             <br><br>
             <p>{{ repay.repay_content }}</p>
             <hr>

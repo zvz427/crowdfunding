@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.base import View
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
-from project.models import ProjectInfo,RepayInfo
+from project.models import ProjectInfo,RepayInfo,AccountNumInfo
 
 '''
 阅读协议
@@ -77,12 +77,13 @@ class ProjectRepayView(View):
             type=repay_type,support_money=support_money,repay_content=repay_content,
             repay_num=repay_num,is_limit_buy=is_limit_buy,limit_buy_num=limit_buy_num,
             freight=freight,receipt=receipt,repay_time=repay_time,
-            # project_id=request.session['project_id']
-            project_id=6,
+            project_id=request.session['project_id'],
+            # project_id=6,
             
         )
     
         data['res'] = 200
+        # 每添加一条回报信息，应该在页面加入table表的元素，并且可以编辑回报内容未完成？？？？？？？？？？？？？？？？？？？？？？？？、
         return JsonResponse(data)
 
 '''
@@ -93,3 +94,30 @@ class AccountInfoView(View):
         context = {
         }
         return render(request, 'startpro/start-step-3.html', context=context)
+
+    def post(self, request):
+        data = dict()
+        company_num = request.POST.get('company_num', '')
+        id_card = request.POST.get('id_card', '')
+    
+        print('request.session[project_id]----------------------', request.session['project_id'])
+    
+        # 要添加关联项目的外键
+        accountinfo = AccountNumInfo.objects.create(
+            company_num=company_num,id_card=id_card,user=request.user,
+            project_id=request.session['project_id'],
+        )
+    
+        data['res'] = 200
+        return JsonResponse(data)
+    
+'''
+完成项目发起
+'''
+class CompleteProView(View):
+    def get(self, request):
+        
+        # 需要将项目的状态设置从即将开始设置为众筹中，项目审核未通过？？？，通过后改状态？？？？？？？？？
+        context = {
+        }
+        return render(request, 'startpro/start-step-4.html', context=context)

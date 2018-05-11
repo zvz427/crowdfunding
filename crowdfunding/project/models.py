@@ -24,15 +24,11 @@ ACTIVE_STATUS = {
     '2': '众筹成功',
 }
 
-
-
 # '''
 # 项目分类表------>可扩展为一张单独的表，rest需分离
 # '''
 # class Category(models.Model):
 #     type = models.CharField(max_length=20,verbose_name='项目分类', default='technology')
-
-
 
 '''
 项目信息
@@ -113,6 +109,7 @@ class RepayInfo(models.Model):
     freight = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='运费')
     receipt = models.CharField(max_length=10, choices=(('0', '不可开发票'), ('1', '可开发票')), verbose_name='是否开发票')
     repay_time = models.IntegerField(verbose_name='回报时间')
+    
     project = models.ForeignKey(ProjectInfo, verbose_name='众筹项目')
     
     class Meta:

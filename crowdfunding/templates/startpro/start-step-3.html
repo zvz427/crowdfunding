@@ -203,11 +203,12 @@
                                         <div class="col-md-6 column">
                                             <form role="form">
                                                 <div class="form-group">
-                                                     <label for="exampleInputEmail1">易付宝企业账号：</label><input type="email" class="form-control" id="exampleInputEmail1" />
+                                                     <label for="exampleInputEmail1">易付宝企业账号：</label><input type="text" class="form-control" id="company_num" placeholder="默认填写手机账号"/>
                                                 </div>
                                                 <div class="form-group">
-                                                     <label for="exampleInputPassword1">法人身份证号：</label><input type="password" class="form-control" id="exampleInputPassword1" />
+                                                     <label for="exampleInputPassword1">法人身份证号：</label><input type="text" class="form-control" id="id_card" placeholder="个人身份证号"/>
                                                 </div>
+                                                {% csrf_token %}
                                             </form>
                                         </div>
                                         <div class="col-md-6 column">
@@ -223,8 +224,8 @@
                         </div>
                         </div>
                         <div class="panel-footer" style="text-align:center;">
-                            <button type="button" class="btn  btn-default btn-lg" onclick="window.location.href='start-step-2.html'">上一步</button>
-                            <button type="button" class="btn  btn-warning btn-lg" onclick="window.location.href='start-step-4.html'">提交</button>
+                            <button type="button" class="btn  btn-default btn-lg" onclick="window.location.href='{% url 'startpro:projectrepay' %}'">上一步</button>
+                            <button type="button" class="btn  btn-warning btn-lg" id="btnFinaSubmit">提交</button>
                             <a class="btn" > 保存草稿 </a>
                         </div>
                     </div>
@@ -254,6 +255,38 @@
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'script/docs.min.js' %}"></script>
     <script src="{% static 'script/back-to-top.js' %}"></script>
+
+ <script>
+        $(function () {
+            $('#btnFinaSubmit').click(function () {
+                company_num = $('#company_num').val()
+                id_card = $('#id_card').val()
+                csrf = $('input[name="csrfmiddlewaretoken"]').val()
+                //remember = $('input[name="remember"]').prop('checked')
+                // 发起ajax请求
+                params = {
+                    'company_num':company_num,
+                    'id_card':id_card,
+                    'csrfmiddlewaretoken':csrf,
+                }
+                $.post('/startpro/projectaccount/', params, function (data) {
+                    // 用户名密码错误 {'res': 0}
+                    // 登录成功 {'res': 1}
+                    if (data.res == 0){
+                        $('#username').next().html('用户名或密码错误').show()
+                    }
+                    else (data.res == 200)
+                    {
+                        // 跳转页面
+                        {#location.href = {% url 'user:userinfo' %} // /user/#}
+                        window.location.href = '{% url 'startpro:completepro' %}'
+
+                    }
+                })
+            })
+        })
+    </script>
+
 	<script>
 $('#myTab a').click(function (e) {
   e.preventDefault()

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'project',
-    'pure_pagination'
+    'pure_pagination',
+    'order',
 ]
 
 #继承django自带的用户模块，需要重载此方法，自己app.自己模型???????????????
@@ -116,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -137,3 +138,11 @@ STATICFILES_DIRS = [
 # 上传文件指定的路径，在生产环境中会上传到CDN，七牛云，又拍云，阿里云，也有可能将静态文件放在nginx的服务器上．
 MEDIA_ROOT = os.path.join(BASE_DIR, "static")
 
+
+# 发送邮件的配置
+EMAIL_HOST = "smtp.163.com"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = "zhuxyadmin@163.com"
+EMAIL_HOST_PASSWORD = "123admin"
+EMAIL_USE_TLS= False
+EMAIL_FROM = "xx众筹<zhuxyadmin@163.com>"
