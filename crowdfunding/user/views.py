@@ -4,13 +4,19 @@ from django.contrib.auth.hashers import make_password
 from .models import UserProfile
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse,JsonResponse
+from project.models import ProjectInfo
 
 '''
 首页
 '''
 class IndexView(View):
     def get(self,request):
-        return render(request,'index.html',{})
+        all_project = ProjectInfo.objects.all().order_by('-fav_num')[:3]
+        context = {
+            'all_project':all_project,
+            
+        }
+        return render(request,'index.html',context=context)
 '''
 用户登录
 '''

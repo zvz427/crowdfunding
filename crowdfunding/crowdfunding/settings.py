@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'project',
+    'pure_pagination'
 ]
 
 #继承django自带的用户模块，需要重载此方法，自己app.自己模型???????????????
@@ -135,3 +136,4 @@ STATICFILES_DIRS = [
 ]
 # 上传文件指定的路径，在生产环境中会上传到CDN，七牛云，又拍云，阿里云，也有可能将静态文件放在nginx的服务器上．
 MEDIA_ROOT = os.path.join(BASE_DIR, "static")
+

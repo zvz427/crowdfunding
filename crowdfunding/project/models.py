@@ -1,11 +1,15 @@
 from django.db import models
 from user.models import UserProfile
+import datetime
+import time
 
+#后期优化建表，设立权重值的字段，可按权重排序，包括项目的权重值排序————————————————————————————————————
 CATEGORY_TYPE = {
     'technology': '科技',
     'design': '设计',
     'public_welfare': '公益',
     'agriculture': '农业',
+    'culture':'文化',
 }
 
 TAGE_TYPE = {
@@ -15,10 +19,19 @@ TAGE_TYPE = {
 }
 # 项目状态
 ACTIVE_STATUS = {
-    '0': '审核中',
+    '0': '即将开始',
     '1': '众筹中',
-    '2': '已结束',
+    '2': '众筹成功',
 }
+
+
+
+# '''
+# 项目分类表------>可扩展为一张单独的表，rest需分离
+# '''
+# class Category(models.Model):
+#     type = models.CharField(max_length=20,verbose_name='项目分类', default='technology')
+
 
 
 '''
@@ -28,18 +41,28 @@ class ProjectInfo(models.Model):
     category_type = ((key, value) for key, value in CATEGORY_TYPE.items())
     tage_type = ((key, value) for key, value in TAGE_TYPE.items())
     active_status = ((key, value) for key, value in ACTIVE_STATUS.items())
+    
     name = models.CharField(max_length=50, default='项目1', verbose_name='众筹项目名字')
     desc = models.CharField(max_length=200, verbose_name='项目一句话简述')
-    fav_num = models.IntegerField(verbose_name='关注人数')
+    fav_num = models.IntegerField(verbose_name='关注人数',default=0)
     target_money = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='目标金额')
-    raised_money = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='已筹金额')
-    create_time = models.DateField(verbose_name='创建日期')
-    category = models.CharField(max_length=10,choices=category_type, verbose_name='项目分类', default='technology')
+    raised_money = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='已筹金额',default=0)
+    total_time = models.IntegerField(verbose_name='筹资天数', default=30)
+    create_time = models.DateField(auto_now_add=True,verbose_name='创建日期')
+    category = models.CharField(max_length=20,choices=category_type, verbose_name='项目分类', default='technology')
     tage = models.CharField(max_length=10,choices=tage_type, default='mobile', verbose_name='项目标签')
+    
+    main_img = models.ImageField(max_length=100, verbose_name='项目头图', upload_to='main_img/%Y/%m',
+                                    default='main_img/default.png')
+    detail_img = models.ImageField(max_length=100, verbose_name='项目详情', upload_to='detail_img/%Y/%m',
+                                    default='detail_img/default.png')
     # detail = models.HTML(verbose_name='产品详情')
+    
     active_status = models.CharField(max_length=10,choices=active_status, verbose_name='项目状态', default='0')
     project_img = models.ImageField(max_length=100, verbose_name='项目图片', upload_to='project_img/%Y/%m',
                                     default='project_img/default.png')
+    
+    support_people = models.IntegerField(verbose_name='支持人数',default=0)
 
     brief_intro = models.CharField(max_length=100, verbose_name='自我介绍',default='自我介绍')
     detail_intro = models.TextField(verbose_name='详细自我介绍',default='详细自我介绍')
@@ -47,7 +70,7 @@ class ProjectInfo(models.Model):
     service_phone = models.CharField(max_length=11, verbose_name='客服电话',default='123')
     
     # initiator = models.ForeignKey(InitiatorInfo, verbose_name='项目发起人或机构')
-    user = models.ForeignKey(UserProfile,verbose_name='发起项目的用户')
+    user = models.ForeignKey(UserProfile,verbose_name='发起项目的用户',default=1)
     
     class Meta:
         verbose_name = '项目信息'
@@ -55,6 +78,23 @@ class ProjectInfo(models.Model):
     
     def __str__(self):
         return self.name
+    
+    # 获取项目截止时间
+    def get_finish_time(self):
+        finish_time = self.create_time + datetime.timedelta(self.total_time)
+        # 格式化时间的字符串，加str
+        return str(finish_time)
+    
+    # 获取项目剩余天数
+    def get_left_day(self):
+        date1 = time.strptime(self.get_finish_time(), "%Y-%m-%d")
+        date2 = time.strptime(time.strftime('%Y-%m-%d',time.localtime(time.time())), "%Y-%m-%d")
+        
+        date1 = datetime.datetime(date1[0], date1[1], date1[2])
+        date2 = datetime.datetime(date2[0], date2[1], date2[2])
+        
+        left_day = date1 - date2
+        return left_day.days
 
 
 '''
@@ -69,7 +109,7 @@ class RepayInfo(models.Model):
                                   default='repay_img/default.png')
     repay_num = models.IntegerField(verbose_name='回报数量')
     is_limit_buy = models.CharField(max_length=10, choices=(('0', '不限购'), ('1', '限购')), verbose_name='单笔限购')
-    limit_buy_num = models.IntegerField(verbose_name='限购数量',null=True,blank=True)
+    limit_buy_num = models.IntegerField(verbose_name='限购数量',default=1)
     freight = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='运费')
     receipt = models.CharField(max_length=10, choices=(('0', '不可开发票'), ('1', '可开发票')), verbose_name='是否开发票')
     repay_time = models.IntegerField(verbose_name='回报时间')

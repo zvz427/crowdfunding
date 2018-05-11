@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^$',IndexView.as_view(),name='index'),
     url(r'^user/',include('user.urls',namespace='user')),
     url(r'^project/', include('project.urls', namespace='project')),
+    url(r'^startpro/', include('startpro.urls', namespace='startpro')),
 
 ]
