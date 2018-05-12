@@ -91,6 +91,12 @@ class ProjectInfo(models.Model):
         
         left_day = date1 - date2
         return left_day.days
+    
+    # 得到项目的众筹进度
+    def get_rate(self):
+        rate = int(self.raised_money)/int(self.target_money)*100
+        print('----------',int(rate))
+        return int(rate)
 
 
 '''
@@ -135,6 +141,22 @@ class AccountNumInfo(models.Model):
     
     def __str__(self):
         return self.id_card
+
+
+'''
+用户关注项目表
+'''
+class UserFavProject(models.Model):
+    addtime = models.DateTimeField(default=datetime.datetime.now, verbose_name='关注时间')
+    user = models.ForeignKey(UserProfile, verbose_name='关注的用户')
+    project = models.ForeignKey(ProjectInfo, verbose_name='被关注的项目')
+    
+    class Meta:
+        verbose_name = '用户关注项目表'
+        verbose_name_plural = verbose_name
+    
+    def __str__(self):
+        return '{0}{1}'.format(self.user.username, self.project.name)
 
 
 # '''

@@ -137,33 +137,34 @@
                                                 </tr>
                                               </thead>
                                               <tbody>
+                                              {% for order in orderinfo %}
                                                 <tr>
                                                   <td style="vertical-align:middle;">
                                                     <div class="thumbnail">
                                                         <div class="caption">
                                                             <h3>
-                                                                活性富氢净水直饮机
+                                                                {{ order.pro.name }}
                                                             </h3>
                                                             <p>
-                                                                订单编号:2x002231111
+                                                                订单编号:{{ order.order_id }}
                                                             </p>
                                                             <p>
-                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 100% </div>
-                                                                <div style="float:right;"><i title="截至日期" class="glyphicon glyphicon-calendar"></i> 剩余8天 </div>
+                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 {{ order.pro.get_rate }}% </div>
+                                                                <div style="float:right;"><i title="截至日期" class="glyphicon glyphicon-calendar"></i> 剩余{{ order.pro.get_left_day }}天 </div>
                                                             </p>
                                                             <br>
                                                                 <div class="progress" style="margin-bottom: 4px;">
-                                                                  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                    <span >众筹中</span>
+                                                                  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ order.pro.get_rate }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ order.pro.get_rate }}%">
+                                                                    <span >{{ order.pro.get_active_status_display }}</span>
                                                                   </div>
                                                                 </div>
                                                         </div>
                                                     </div>
                                                   </td>
-                                                  <td style="vertical-align:middle;">2017-05-23 11:31:22</td>
-                                                  <td style="vertical-align:middle;">1.00<br>(运费：0.00 )</td>
-                                                  <td style="vertical-align:middle;">1</td>
-                                                  <td style="vertical-align:middle;">交易关闭</td>
+                                                  <td style="vertical-align:middle;">{{ order.createtime | date:'Y年n月d日 H:i ' }}</td>
+                                                  <td style="vertical-align:middle;">{{ order.pay_price }}<br>(运费：{{ order.freight }} )</td>
+                                                  <td style="vertical-align:middle;">{{ order.repay_count }}</td>
+                                                  <td style="vertical-align:middle;">{{ order.get_order_status_display }}</td>
                                                   <td style="vertical-align:middle;">
                                                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                                           <button type="button" class="btn btn-default">删除订单</button>
@@ -171,40 +172,7 @@
                                                     </div>
                                                   </td>
                                                 </tr>
-                                                <tr>
-                                                  <td style="vertical-align:middle;">
-                                                    <div class="thumbnail">
-                                                        <div class="caption">
-                                                            <h3>
-                                                                BAVOSN便携折叠移动电源台灯
-                                                            </h3>
-                                                            <p>
-                                                                订单编号:2x002231111
-                                                            </p>
-                                                            <p>
-                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 100% </div>
-                                                                <div style="float:right;"><i title="截至日期" class="glyphicon glyphicon-calendar"></i> 剩余8天 </div>
-                                                            </p>
-                                                            <br>
-                                                                <div class="progress" style="margin-bottom: 4px;">
-                                                                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                    <span >众筹成功</span>
-                                                                  </div>
-                                                                </div>
-                                                        </div>
-                                                    </div>
-                                                  </td>
-                                                  <td style="vertical-align:middle;">2017-05-23 11:31:22</td>
-                                                  <td style="vertical-align:middle;">1.00<br>(运费：0.00 )</td>
-                                                  <td style="vertical-align:middle;">1</td>
-                                                  <td style="vertical-align:middle;">交易关闭</td>
-                                                  <td style="vertical-align:middle;">
-                                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                          <button type="button" class="btn btn-default">删除订单</button>
-                                                          <button type="button" class="btn btn-default">交易详情</button>
-                                                    </div>
-                                                  </td>
-                                                </tr>
+                                              {% endfor %}
                                               </tbody>
                                             </table>
                                         </div>
@@ -225,37 +193,39 @@
                                                 </tr>
                                               </thead>
                                               <tbody>
+                                              {% for project in fav_project %}
                                                 <tr>
                                                   <td style="vertical-align:middle;">
                                                     <div class="thumbnail">
                                                         <div class="caption">
                                                             <p>
-                                                                BAVOSN便携折叠移动电源台灯
+                                                                {{ project.name }}
                                                             </p>
                                                             <p>
-                                                                <i class="glyphicon glyphicon-jpy"></i> 已筹集 1000.0元
+                                                                <i class="glyphicon glyphicon-jpy"></i> 已筹集 {{ project.raised_money }}元
                                                             </p>
                                                             <p>
-                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 100% </div>
-                                                                <div style="float:right;"><i class="glyphicon glyphicon-calendar"></i> 剩余2天 </div>
+                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 {{ project.get_rate }}% </div>
+                                                                <div style="float:right;"><i class="glyphicon glyphicon-calendar"></i> 剩余{{ project.get_left_day }}天 </div>
                                                             </p>
                                                             <br>
                                                                 <div class="progress" style="margin-bottom: 4px;">
-                                                                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                    <span >众筹中</span>
+                                                                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ project.get_rate }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.get_rate }}%">
+                                                                    <span >{{ project.get_active_status_display }}</span>
                                                                   </div>
                                                                 </div>
                                                         </div>
                                                     </div>
                                                   </td>
-                                                  <td style="vertical-align:middle;">1</td>
-                                                  <td style="vertical-align:middle;">1</td>
+                                                  <td style="vertical-align:middle;">{{ project.support_people }}</td>
+                                                  <td style="vertical-align:middle;">{{ project.fav_num }}</td>
                                                   <td style="vertical-align:middle;">
                                                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                                          <button type="button" class="btn btn-default">取消关注</button>
+                                                          <button type="button" class="btn btn-default canlefav" value="{{ project.id }}">取消关注</button>
                                                     </div>
                                                   </td>
                                                 </tr>
+                                              {% endfor %}
                                               </tbody>
                                             </table>
                                         </div>
@@ -279,27 +249,28 @@
                                                 </tr>
                                               </thead>
                                               <tbody>
+                                              {% for pro in project %}
                                                 <tr>
                                                   <td style="vertical-align:middle;">
                                                     <div class="thumbnail">
                                                         <div class="caption">
                                                             <p>
-                                                                BAVOSN便携折叠移动电源台灯
+                                                                {{ pro.name }}
                                                             </p>
                                                             <p>
-                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 100% </div>
-                                                                <div style="float:right;"><i title="截至日期" class="glyphicon glyphicon-calendar"></i> 剩余8天 </div>
+                                                                <div style="float:left;"><i class="glyphicon glyphicon-screenshot" title="目标金额" ></i> 已完成 {{ pro.get_rate }}% </div>
+                                                                <div style="float:right;"><i title="截至日期" class="glyphicon glyphicon-calendar"></i> {{ pro.get_left_day }} </div>
                                                             </p>
                                                             <br>
                                                                 <div class="progress" style="margin-bottom: 4px;">
-                                                                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                    <span >众筹中</span>
+                                                                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pro.get_rate }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ pro.get_rate }}%">
+                                                                    <span >{{ pro.get_active_status_display }}</span>
                                                                   </div>
                                                                 </div>
                                                         </div>
                                                     </div>
                                                   </td>
-                                                  <td style="vertical-align:middle;">1.00<br>(运费：0.00 )</td>
+                                                  <td style="vertical-align:middle;">{{ pro.raised_money }}</td>
                                                   <td style="vertical-align:middle;">草稿</td>
                                                   <td style="vertical-align:middle;">
                                                     <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
@@ -310,6 +281,7 @@
                                                     </div>
                                                   </td>
                                                 </tr>
+                                              {% endfor %}
                                               </tbody>
                                             </table>
                                         </div>
@@ -345,6 +317,42 @@
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'script/docs.min.js' %}"></script>
     <script src="{% static 'script/back-to-top.js' %}"></script>
+
+   <script type="text/javascript">
+                //取消我的关注
+                function add_fav(current_elem, pro_id,) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "/project/add_fav/",
+                        data: {'pro_id': pro_id, },
+                        async: true,
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                        },
+                        success: function (data) {
+                            if (data.status == 'fail') {
+                                if (data.msg == '用户未登录') {
+                                    window.location.href = "login.html";
+                                } else {
+                                    alert(data.msg)
+                                }
+
+                            } else if (data.status == 'success') {
+                                {#current_elem.text(data.msg)#}
+                                $(current_elem).text(data.msg);
+                            }
+                        },
+                    });
+                }
+
+                $('.canlefav').on('click', function () {
+                    pro_id = $(this).val();
+                    add_fav($(this), pro_id);
+                    {#add_fav($(this), 6, 2);#}
+                });
+ 	</script>
+
 	<script>
 $('#myTab a').click(function (e) {
   e.preventDefault()

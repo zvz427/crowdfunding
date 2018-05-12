@@ -8,6 +8,8 @@ CERTIFY_TYPE = {
     'PersonalManagement': '个人经营',
     'GovernmentAndNoprofitOrganizations': '政府及非营利组织',
 }
+
+
 '''
 用户信息
 '''
@@ -20,7 +22,6 @@ class UserProfile(AbstractUser):
         
     def __str__(self):
         return self.username
-
 
 '''
 用户认证信息

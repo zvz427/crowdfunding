@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.views.generic.base import View
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse,JsonResponse
-from .models import ProjectInfo,RepayInfo
+from .models import ProjectInfo,RepayInfo,UserFavProject
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 '''
@@ -15,6 +15,7 @@ class ProjectDetailView(View):
         all_repay = project.repayinfo_set.all().order_by('support_money')
         
         other_project = ProjectInfo.objects.all().order_by('-fav_num')[:2]
+        
         
         context = {
             'project': project,
@@ -71,3 +72,43 @@ class ProjectListView(View):
         }
         return render(request, 'project/project_list.html',context=context)
 
+'''
+项目添加到关注
+'''
+class AddFavView(View):
+    def set_fav_nums(self,pro_id,num=1):
+        proinfo = ProjectInfo.objects.get(id=pro_id)
+        proinfo.fav_num += num
+        proinfo.save()
+
+        
+    def post(self,request):
+        pro_id = int(request.POST.get('pro_id',0))
+        
+        res = dict()
+        if not request.user.is_authenticated():
+            res['status'] = 'fail'
+            res['msg'] = '用户未登录！'
+            return JsonResponse(res)
+
+        exist_records = UserFavProject.objects.filter(user=request.user,project_id=pro_id)
+        if exist_records:
+            exist_records.delete()
+            self.set_fav_nums(pro_id,-1)
+            res['status'] = 'success'
+            res['num'] = 0
+            res['msg'] = '关注'
+        else:
+            user_fav = UserFavProject()
+            if pro_id:
+                user_fav.user = request.user
+                user_fav.project_id = pro_id
+                user_fav.save()
+                self.set_fav_nums(pro_id,1)
+                res['msg'] = '已关注'
+                res['num'] = 1
+                res['status'] = 'success'
+            else:
+                res['status'] = 'fail'
+                res['msg'] = '关注出错'
+        return JsonResponse(res)

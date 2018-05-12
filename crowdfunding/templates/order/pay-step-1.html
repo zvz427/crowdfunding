@@ -200,6 +200,7 @@
                                     </table>
                                     <div style="float:right;" >
                                     <p>总价(含运费)：<span style="font-size:16px;color:#F60;" class="total">￥<em>0</em></span></p>
+                                        {% csrf_token %}
                                     <button type="button" class="btn btn-warning btn-lg" style="float:right;" id="btnSubmit"><i class="glyphicon glyphicon-credit-card"></i> 去结算</button>
                                     </div>
                                 </div>
@@ -255,70 +256,34 @@
     <script src="{% static 'script/back-to-top.js' %}"></script>
 
 
+
+
  <script type="text/javascript">
-    //收藏分享
-    function add_fav(current_elem, fav_id, fav_type) {
-        $.ajax({
-            cache: false,
-            type: "POST",
-            url: "/org/add_fav/",
-            data: {'fav_id': fav_id, 'fav_type': fav_type},
-            async: true,
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-            },
-            success: function (data) {
-                if (data.status == 'fail') {
-                    if (data.msg == '用户未登录') {
-                        window.location.href = "login.html";
-                    } else {
-                        alert(data.msg)
-                    }
-
-                } else if (data.status == 'success') {
-                    current_elem.text(data.msg)
-                }
-            },
-        });
-    }
-
-    $('#jsLeftBtn').on('click', function () {
-        add_fav($(this), {{ course.id }}, 1);
-    });
-
-    $('#jsRightBtn').on('click', function () {
-        add_fav($(this), {{ course_org.id }}, 2);
-    });
-
-
-</script>
-
-
- <script>
     $(function () {
         $('#btnSubmit').click(function () {
-                company_num = $('#company_num').val()
-                id_card = $('#id_card').val()
+                {#repay_count = $('#repay_count').val()#}
+                {#freight = $('#freight').val()#}
                 csrf = $('input[name="csrfmiddlewaretoken"]').val()
                 //remember = $('input[name="remember"]').prop('checked')
                 // 发起ajax请求
                 params = {
-                    'company_num':company_num,
-                    'id_card':id_card,
+                    'repay_count':repay_count,
+                    'freight':freight,
+                    'total_price':total_price,
+                    'repayinfo_id':repayinfo_id,
                     'csrfmiddlewaretoken':csrf,
                 }
-                $.post('/startpro/projectaccount/', params, function (data) {
+                $.post('/order/createorder/', params, function (data) {
                     // 用户名密码错误 {'res': 0}
                     // 登录成功 {'res': 1}
-                    if (data.res == 0){
-                        $('#username').next().html('用户名或密码错误').show()
-                    }
-                    else (data.res == 200)
-                    {
-                        // 跳转页面
+                    if (data.res == 200){
+                         // 跳转页面
                         {#location.href = {% url 'user:userinfo' %} // /user/#}
-                        window.location.href = '{% url 'startpro:completepro' %}'
-
+                        window.location.href = "{% url 'order:confirmorder' %}"
+                    }
+                    else
+                    {
+                        $('#username').next().html('用户名或密码错误').show()
                     }
                 })
             })
@@ -331,11 +296,15 @@
             repay_count = $('.num_show').val()
             support_money = $('.support_money').text()
             freight = $('.freight').text()
+            if (freight == ''){
+                freight = 0
+            }
             // 计算商品的总价
+            repayinfo_id = {{ repayinfo.id }}
             repay_count = parseInt(repay_count)
             support_money = parseInt(support_money)
             freight = parseInt(freight)
-            total_price = support_money * repay_count + freight
+            total_price = support_money * repay_count
             // 设置商品总价
             $('.total').find('em').text(total_price.toFixed(2))
         }

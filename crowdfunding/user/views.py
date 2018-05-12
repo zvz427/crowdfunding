@@ -1,11 +1,12 @@
 from django.shortcuts import render,redirect
 from django.views.generic.base import View
 from django.contrib.auth.hashers import make_password
-from .models import UserProfile,UserCertify
+from .models import UserProfile,UserCertify,UserAddress
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse,JsonResponse
-from project.models import ProjectInfo
+from project.models import ProjectInfo,UserFavProject
 from util.email_send import sendemail
+from order.models import OrderInfo,RepayInfo
 
 '''
 首页
@@ -66,7 +67,25 @@ class UserInfoView(View):
 '''
 class UserFundingView(View):
     def get(self,request):
-        return render(request,'user/minecrowdfunding.html',{})
+        orderinfo = OrderInfo.objects.filter(user=request.user)
+        
+        for order in orderinfo:
+            repayinfo = RepayInfo.objects.get(id=order.repayinfo_id)
+            project = repayinfo.project
+            order.pro = project
+            
+        # 用户发起的所有项目
+        project = ProjectInfo.objects.filter(user=request.user)
+        
+        #用户关注的所有项目
+        fav_project = UserFavProject.objects.filter(user=request.user)
+        fav_project = [pro.project for pro in fav_project]
+        context = {
+            'orderinfo':orderinfo,
+            'project':project,
+            'fav_project':fav_project,
+        }
+        return render(request,'user/minecrowdfunding.html',context=context)
     
 '''
 用户认证申请
@@ -126,7 +145,7 @@ class UserCertifyBaseInfoView(View):
         return JsonResponse(data)
 
 '''
-用户认证基本信息
+用户认证上传图片
 '''
 class UserCertifyLoadImgView(View):
     def get(self,request):
@@ -179,3 +198,17 @@ class UserCertifyVerifyView(View):
             data['res'] = 200
             return JsonResponse(data)
         # 审核通过后将实名状态设置为1
+        
+'''
+用户添加送货地址
+'''
+class AddAddressView(View):
+    def post(self,request):
+        data = dict()
+        receiver = request.POST.get('receiver','')
+        phone = request.POST.get('phone','')
+        address = request.POST.get('address','')
+        add = UserAddress.objects.create(receiver=receiver,phone=phone,address=address,user=request.user)
+        print('-------------------',address)
+        data['res'] = 200
+        return JsonResponse(data)

@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
 from .views import LoginView,RegisterView,UserInfoView,UserFundingView,UserCertifyApplyView,UserCertifyBaseInfoView,\
-    UserCertifyLoadImgView,UserCertifyEmailView,UserCertifyVerifyView
+    UserCertifyLoadImgView,UserCertifyEmailView,UserCertifyVerifyView,AddAddressView
 
 
 urlpatterns = [
@@ -17,6 +17,9 @@ urlpatterns = [
     url(r'^usercertify_loadimg/$', UserCertifyLoadImgView.as_view(), name='usercertify_loadimg'),
     url(r'^usercertify_email/$', UserCertifyEmailView.as_view(), name='usercertify_email'),
     url(r'^usercertify_verify/$', UserCertifyVerifyView.as_view(), name='usercertify_verify'),
+    
+    #添加地址
+    url(r'^add_address/$', AddAddressView.as_view(), name='add_address'),
 
 ]
 

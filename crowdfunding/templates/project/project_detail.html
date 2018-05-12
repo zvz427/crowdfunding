@@ -120,7 +120,7 @@
                             {{ project.desc }}
                         </div>
                         <div style="float:right;">
-                            <button type="button" class="btn btn-default"><i style="color:#f60" class="glyphicon glyphicon-heart"></i> 关注 {{ project.fav_num }}</button>
+                            <button type="button" id="favbtn" class="btn btn-default"><i style="color:#f60" class="glyphicon glyphicon-heart"></i> <span class="favflag">关注</span> <span class="favnum">{{ project.fav_num }}</span></button>
                         </div>
                     </div>
                 </div>
@@ -145,13 +145,13 @@
                                     <h3 >
                                         已筹资金：￥{{ project.raised_money }}
                                     </h3>
-                                    <p><span>目标金额 ： {{ project.target_money }}</span><span style="float:right;">达成 ： 60%</span></p>
+                                    <p><span>目标金额 ： {{ project.target_money }}</span><span style="float:right;">达成 ： {{ project.get_rate }}%</span></p>
                                     <div class="progress" style="height:10px; margin-bottom: 5px;">
-                                      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ project.get_rate }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ project.get_rate }}%;"></div>
                                     </div>
                                     <p>剩余 {{ project.get_left_day }} 天</p>
                                     <div>
-                                        <p><span>已有629人支持该项目</span></p>
+                                        <p><span>已有{{ project.support_people }}人支持该项目</span></p>
                                      <button type="button" class="btn  btn-warning btn-lg btn-block" data-toggle="modal" data-target="#myModal">立即支持</button>
                                     </div>
                                 </div>
@@ -294,6 +294,48 @@
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'script/docs.min.js' %}"></script>
     <script src="{% static 'script/back-to-top.js' %}"></script>
+
+  <script type="text/javascript">
+                //关注
+                function add_fav(current_elem, pro_id,) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "/project/add_fav/",
+                        data: {'pro_id': pro_id, },
+                        async: true,
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                        },
+                        success: function (data) {
+                            if (data.status == 'fail') {
+                                if (data.msg == '用户未登录') {
+                                    window.location.href = "login.html";
+                                } else {
+                                    alert(data.msg)
+                                }
+
+                            } else if (data.status == 'success') {
+                                {#current_elem.text(data.msg)#}
+                                if (data.num == '0'){
+                                    favnum = parseInt($('.favnum').text()) - 1
+
+                                }else if (data.num == '1') {
+                                    favnum = parseInt($('.favnum').text()) + 1
+                                }
+                                $('.favflag').text(data.msg);
+                                $('.favnum').text(favnum);
+                            }
+                        },
+                    });
+                }
+
+                $('#favbtn').on('click', function () {
+                    add_fav($(this), {{ project.id }});
+                    {#add_fav($(this), 6, 2);#}
+                });
+ 	</script>
+
 	<script>
     $(".prjtip img").css("cursor", "pointer");
     $(".prjtip img").click(function(){

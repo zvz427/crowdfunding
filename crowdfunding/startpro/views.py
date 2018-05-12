@@ -100,7 +100,7 @@ class AccountInfoView(View):
         company_num = request.POST.get('company_num', '')
         id_card = request.POST.get('id_card', '')
     
-        print('request.session[project_id]----------------------', request.session['project_id'])
+        # print('request.session[project_id]----------------------', request.session['project_id'])
     
         # 要添加关联项目的外键
         accountinfo = AccountNumInfo.objects.create(

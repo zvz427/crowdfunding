@@ -8,9 +8,9 @@ from datetime import datetime
 回报订单信息
 '''
 class OrderInfo(models.Model):
-    address = models.ForeignKey(UserAddress,verbose_name='订单的收货地址',default='')
+    address = models.ForeignKey(UserAddress,verbose_name='订单的收货地址',default=1)
     repayinfo = models.ForeignKey(RepayInfo,verbose_name='订单的购买回报信息',default='')
-    user = models.ForeignKey(UserProfile,verbose_name='订单用户',default='')
+    user = models.ForeignKey(UserProfile,verbose_name='订单用户')
 
     order_id = models.CharField(max_length=64, primary_key=True, verbose_name='订单编号')
     need_receipt = models.CharField(max_length=10,choices=(('0','无需发票'),('1','需要发票')),verbose_name='是否开发票',default='0')
@@ -22,6 +22,8 @@ class OrderInfo(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='支持总价',default=0)
     discount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='优惠价格',default=0)
     pay_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='支付价格',default=0)
+    order_status = models.CharField(max_length=10,verbose_name='订单状态',default='1',
+                                    choices=((('1', "待支付"),('2', "待发货"),('3', "待收货"),('4', "待评价"),('5', "已完成"),)))
     
     class Meta:
         verbose_name = '回报订单信息'
