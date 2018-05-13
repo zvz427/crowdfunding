@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse,JsonResponse
 from .models import ProjectInfo,RepayInfo,UserFavProject
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 '''
 项目详情
@@ -31,7 +32,17 @@ class ProjectDetailView(View):
 class ProjectListView(View):
     def get(self, request):
         all_project = ProjectInfo.objects.all()
+
+        keywords = request.GET.get('keywords', '')
         
+        # 加入搜索词排序，并且在前端的链接中加入关键词，返回到前端页面中，使每次分类搜索的排序都会带上吃关键词
+        if keywords:
+            all_project = all_project.filter(
+                Q(name__contains=keywords)|
+                Q(desc__contains=keywords)|
+                Q(detail_intro__contains=keywords)
+            )
+      
         # 按分类排序
         sort = request.GET.get('sort','')
         if sort:
@@ -69,6 +80,7 @@ class ProjectListView(View):
             'sort':sort,
             'status':status,
             'order':order,
+            'keywords':keywords,
         }
         return render(request, 'project/project_list.html',context=context)
 
