@@ -120,7 +120,7 @@
                             {{ project.desc }}
                         </div>
                         <div style="float:right;">
-                            <button type="button" id="favbtn" class="btn btn-default"><i style="color:#f60" class="glyphicon glyphicon-heart"></i> <span class="favflag">关注</span> <span class="favnum">{{ project.fav_num }}</span></button>
+                            <button type="button" id="favbtn" class="btn btn-default"><i style="color:#f60" class="glyphicon glyphicon-heart"></i> <span class="favflag">{% ifequal been_fav '0'%}关注{% else %}已关注{% endifequal %}</span> <span class="favnum">{{ project.fav_num }}</span></button>
                         </div>
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                         {% for pro in other_project %}
 					<div class="prjtip panel panel-default" style="border-radius: 0px;">
 						<div class="panel-body">
-                            <img src="{% static pro.project_img %}" width="100%" height="100%">
+                            <img src="{% static pro.main_img %}" width="100%" height="100%">
 						</div>
 					</div>
                         {% endfor %}

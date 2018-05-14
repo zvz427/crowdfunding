@@ -13,6 +13,14 @@ class ProjectDetailView(View):
     def get(self, request,project_id):
         project = ProjectInfo.objects.get(id=project_id)
 
+        been_fav = '0'
+        try:
+            userfav = UserFavProject.objects.get(user=request.user,project_id=project_id)
+        except Exception as e:
+            pass
+        else:
+            been_fav = '1'
+            
         all_repay = project.repayinfo_set.all().order_by('support_money')
         
         other_project = ProjectInfo.objects.all().order_by('-fav_num')[:2]
@@ -21,7 +29,9 @@ class ProjectDetailView(View):
         context = {
             'project': project,
             'all_repay':all_repay,
-            'other_project':other_project
+            'other_project':other_project,
+            'been_fav':been_fav,
+            
         }
         return render(request, 'project/project_detail.html', context=context)
 

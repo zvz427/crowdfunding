@@ -132,14 +132,21 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-
 # 设置前端静态文件的statis的路径
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static')
 ]
 # 上传文件指定的路径，在生产环境中会上传到CDN，七牛云，又拍云，阿里云，也有可能将静态文件放在nginx的服务器上．
-MEDIA_ROOT = os.path.join(BASE_DIR, "static")
 
+# 保存静态文件的路径,与static文件分离
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+#打印文件绝对路径
+def dd():
+    print('MEDIA_ROOT',MEDIA_ROOT)
+    print('BASE_DIR',BASE_DIR)
+dd()
 
 # 发送邮件的配置
 EMAIL_HOST = "smtp.163.com"

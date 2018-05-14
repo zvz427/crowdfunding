@@ -55,8 +55,6 @@ class ProjectInfo(models.Model):
     # detail = models.HTML(verbose_name='产品详情')
     
     active_status = models.CharField(max_length=10,choices=active_status, verbose_name='项目状态', default='0')
-    project_img = models.ImageField(max_length=100, verbose_name='项目图片', upload_to='project_img/%Y/%m',
-                                    default='project_img/default.png')
     
     support_people = models.IntegerField(verbose_name='支持人数',default=0)
 

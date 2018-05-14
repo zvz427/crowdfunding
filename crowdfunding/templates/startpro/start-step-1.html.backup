@@ -201,7 +201,7 @@
 					项目信息
 				</h3>
 			</div>
-            <form class="form-horizontal" method="post" action="/startpro/projectinfo/" enctype="multipart/form-data">
+            <form class="form-horizontal">
               <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">分类信息</label>
                 <div class="col-sm-10">
@@ -247,26 +247,26 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">项目名称</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="projectname" name="projectname">
+                  <input type="text" class="form-control" id="projectname">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">一句话简介</label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" rows="5" id="projectdesc" name="projectdesc"></textarea>
+                  <textarea class="form-control" rows="5" id="projectdesc"></textarea>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">筹资金额（元）</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" style="width:100px;" id="target_money" name="target_money">
+                  <input type="text" class="form-control" style="width:100px;" id="target_money">
                   <label class="control-label">筹资金额不能低于100元,不能高于1000000000元</label>
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">筹资天数（天）</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" style="width:100px;" id="total_time" name="total_time">
+                  <input type="text" class="form-control" style="width:100px;" id="total_time">
                   <label class="control-label">一般10-90天，建议30天</label>
                 </div>
               </div>
@@ -289,74 +289,47 @@
 
                 </div>
               </div>
-                <div class="form-group">
-                <label class="col-sm-2 control-label">自我介绍</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" placeholder="一句话自我介绍，不超过40字" id="brief_intro" name="brief_intro">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">详细自我介绍</label>
-                <div class="col-sm-10">
-                  <textarea class="form-control" rows="5" id="detail_intro" name="detail_intro" placeholder="向支持者详细介绍你自己或你的团队及项目背景，让支持者在最短时间内了解你，不超过160字"></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">联系电话</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="mobile" name="mobile" placeholder="此信息不会显示在项目页面">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-2 control-label">客服电话</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="service_phone" name="service_phone" placeholder="此信息显示在项目页面">
-                </div>
-              </div>
-                {% csrf_token %}
-                <input type="submit" name="" id="" value="下一步">
-{#                        <button type="submit" class="btn  btn-warning btn-lg" id="btnSubmit">下一步</button>#}
             </form>
 		</div>
-
 		<div class="col-md-12 column">
 			<div class="page-header" style="    border-bottom-style: dashed;">
 				<h3>
 					发起人信息
 				</h3>
 			</div>
-{#            <form class="form-horizontal">#}
-{#              <div class="form-group">#}
-{#                <label class="col-sm-2 control-label">自我介绍</label>#}
-{#                <div class="col-sm-10">#}
-{#                  <input type="text" class="form-control" placeholder="一句话自我介绍，不超过40字" id="brief_intro">#}
-{#                </div>#}
-{#              </div>#}
-{#              <div class="form-group">#}
-{#                <label class="col-sm-2 control-label">详细自我介绍</label>#}
-{#                <div class="col-sm-10">#}
-{#                  <textarea class="form-control" rows="5" id="detail_intro" placeholder="向支持者详细介绍你自己或你的团队及项目背景，让支持者在最短时间内了解你，不超过160字"></textarea>#}
-{#                </div>#}
-{#              </div>#}
-{#              <div class="form-group">#}
-{#                <label class="col-sm-2 control-label">联系电话</label>#}
-{#                <div class="col-sm-10">#}
-{#                  <input type="text" class="form-control" id="mobile" placeholder="此信息不会显示在项目页面">#}
-{#                </div>#}
-{#              </div>#}
-{#              <div class="form-group">#}
-{#                <label class="col-sm-2 control-label">客服电话</label>#}
-{#                <div class="col-sm-10">#}
-{#                  <input type="text" class="form-control" id="service_phone" placeholder="此信息显示在项目页面">#}
-{#                </div>#}
-{#              </div>#}
-{#                {% csrf_token %}#}
-{#            </form>#}
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">自我介绍</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="一句话自我介绍，不超过40字" id="brief_intro">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">详细自我介绍</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" rows="5" id="detail_intro" placeholder="向支持者详细介绍你自己或你的团队及项目背景，让支持者在最短时间内了解你，不超过160字"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">联系电话</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="mobile" placeholder="此信息不会显示在项目页面">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">客服电话</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="service_phone" placeholder="此信息显示在项目页面">
+                </div>
+              </div>
+                {% csrf_token %}
+            </form>
 		</div>
 	</div>
 </div>
                         </div>
                         <div class="panel-footer" style="text-align:center;">
+                            <button type="button" class="btn  btn-warning btn-lg" id="btnSubmit">下一步</button>
                         </div>
                     </div>
                 </div>
@@ -388,58 +361,58 @@
 	<script src="{% static 'script/docs.min.js' %}"></script>
     <script src="{% static 'script/back-to-top.js' %}"></script>
 
-{#     <script>#}
-{#        $(function () {#}
-{#            $('#btnSubmit').click(function () {#}
-{#                category_type = $("input[name='inlineRadioOptions']:checked").val();#}
+     <script>
+        $(function () {
+            $('#btnSubmit').click(function () {
+                category_type = $("input[name='inlineRadioOptions']:checked").val();
                 {#category_type = $("input[name='inlineRadioOptions']:checked").val();项目多选标签#}
-{#                projectname = $('#projectname').val()#}
-{#                projectdesc = $('#projectdesc').val()#}
-{#                target_money = $('#target_money').val()#}
-{#                total_time = $('#total_time').val()#}
-{#                //项目头图#}
-{#                main_img = $('#main_img').val()#}
-{#                //项目详情#}
-{#                detail_img = $('#detail_img').val()#}
-{#                brief_intro = $('#brief_intro').val()#}
-{#                detail_intro = $('#detail_intro').val()#}
-{#                mobile = $('#mobile').val()#}
-{#                service_phone = $('#service_phone').val()#}
-{#                csrf = $('input[name="csrfmiddlewaretoken"]').val()#}
-{#                //remember = $('input[name="remember"]').prop('checked')#}
-{#                // 发起ajax请求#}
-{#                params = {#}
-{#                    'category_type':category_type,#}
+                projectname = $('#projectname').val()
+                projectdesc = $('#projectdesc').val()
+                target_money = $('#target_money').val()
+                total_time = $('#total_time').val()
+                //项目头图
+                main_img = $('#main_img').val()
+                //项目详情
+                detail_img = $('#detail_img').val()
+                brief_intro = $('#brief_intro').val()
+                detail_intro = $('#detail_intro').val()
+                mobile = $('#mobile').val()
+                service_phone = $('#service_phone').val()
+                csrf = $('input[name="csrfmiddlewaretoken"]').val()
+                //remember = $('input[name="remember"]').prop('checked')
+                // 发起ajax请求
+                params = {
+                    'category_type':category_type,
                     {#'projectname':projectname,项目多选标签#}
-{#                    'projectname':projectname,#}
-{#                    'projectdesc':projectdesc,#}
-{#                    'target_money':target_money,#}
-{#                    'total_time':total_time,#}
-{#                    'main_img':main_img,#}
-{#                    'detail_img':detail_img,#}
-{#                    'brief_intro':brief_intro,#}
-{#                    'detail_intro':detail_intro,#}
-{#                    'mobile':mobile,#}
-{#                    'service_phone':service_phone,#}
-{#                    'csrfmiddlewaretoken':csrf,#}
-{#                }#}
-{#                $.post('/startpro/projectinfo/', params, function (data) {#}
-{#                    // 用户名密码错误 {'res': 0}#}
-{#                    // 登录成功 {'res': 1}#}
-{#                    if (data.res == 0){#}
-{#                        $('#username').next().html('用户名或密码错误').show()#}
-{#                    }#}
-{#                    else (data.res == 200)#}
-{#                    {#}
-{#                        // 跳转页面#}
+                    'projectname':projectname,
+                    'projectdesc':projectdesc,
+                    'target_money':target_money,
+                    'total_time':total_time,
+                    'main_img':main_img,
+                    'detail_img':detail_img,
+                    'brief_intro':brief_intro,
+                    'detail_intro':detail_intro,
+                    'mobile':mobile,
+                    'service_phone':service_phone,
+                    'csrfmiddlewaretoken':csrf,
+                }
+                $.post('/startpro/projectinfo/', params, function (data) {
+                    // 用户名密码错误 {'res': 0}
+                    // 登录成功 {'res': 1}
+                    if (data.res == 0){
+                        $('#username').next().html('用户名或密码错误').show()
+                    }
+                    else (data.res == 200)
+                    {
+                        // 跳转页面
                         {#location.href = {% url 'user:userinfo' %} // /user/#}
-{#                        window.location.href = '{% url 'startpro:projectrepay' %}'#}
-{##}
-{#                    }#}
-{#                })#}
-{#            })#}
-{#        })#}
-{#    </script>#}
+                        window.location.href = '{% url 'startpro:projectrepay' %}'
+
+                    }
+                })
+            })
+        })
+    </script>
 
 	<script>
 $('#myTab a').click(function (e) {

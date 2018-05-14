@@ -3,40 +3,88 @@ from django.views.generic.base import View
 from django.contrib.auth.hashers import make_password
 from .models import UserProfile,UserCertify,UserAddress
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponsePermanentRedirect
 from project.models import ProjectInfo,UserFavProject
 from util.email_send import sendemail
 from order.models import OrderInfo,RepayInfo
+from django.contrib.auth import logout,login,authenticate
+from datetime import datetime
 
 '''
 首页
 '''
 class IndexView(View):
     def get(self,request):
-        all_project = ProjectInfo.objects.all().order_by('-fav_num')[:3]
+        
+        # 访问的客户端的IP地址
+        if 'HTTP_X_FORWARDED_FOR' in request.META:
+            # 使用nginx时获取的地址
+            ip = request.META['HTTP_X_FORWARDED_FOR']
+        else:
+            ip = request.META['REMOTE_ADDR']
+        print('访问的客户端的IP地址',ip)
+        with open('./loginfo.txt','a+') as f:
+            f.write('访问的客户端的IP地址{},时间{}\n'.format(ip,datetime.now()))
+            
+        projects = ProjectInfo.objects.all()
+        all_project = projects.order_by('-fav_num')[:3]
+        
+        category = request.POST.get('category')
+        tech_project = projects.filter(category='technology').order_by('-fav_num')[:4]
+        
         context = {
             'all_project':all_project,
-            
+            'tech_project':tech_project,
         }
         return render(request,'index.html',context=context)
+    
 '''
 用户登录
 '''
 class LoginView(View):
-    def get(self,request):
-        print('run get')
-        return render(request,'user/login.html',{})
-    
-    #post ajax的数据没有传过来，使用的是form表单？？？？？？？？？？？
-    def post(self,request):
-        print('run post')
+    def get(self, request):
+        return render(request, "user/login.html", {})
+
+    def post(self, request):
         data = dict()
         username = request.POST.get('username')
         password = request.POST.get('password')
-        zxy = request.POST.get('zxy')
-        print(username,password)
+        print(username, password)
+        user = authenticate(username=username, password=password)
+        login(request, user)
         data['res'] = 200
-        return redirect(reverse('index'))
+        return JsonResponse(data)
+        # login_form = LoginForm(request.POST)
+        # if login_form.is_valid():  # 验证成功
+        #     username = request.POST.get("username", "")
+        #     password = request.POST.get("password", "")
+        #     user = authenticate(username=username, password=password)
+        #     if user is not None:
+        #        if user.is_active:
+        #             login(request, user)
+        #             return render(request, "index.html")
+        #        else:
+        #            return render(request,'login.html',{"msg":"用户没有激活，请进入邮箱激活"})
+        #     else:
+        #         return render(request, "login.html", {"msg": u"用户名或密码错误"})
+        # else:
+        #     return render(request, "login.html", {"login_form": login_form})
+
+# 根本没有
+# class LoginView(View):
+#     def get(self,request):
+#         return render(request,'user/login.html',{})
+#
+#     #post ajax的数据没有传过来，使用的是form表单？？？？？？？？？？？
+#     def post(self,request):
+#         print('run post')
+#         data = dict()
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         print(username,password)
+#         data['res'] = 200
+#         return JsonResponse(data)
+#         # return redirect(reverse('index'))
     
 '''
 用户注册
@@ -54,7 +102,15 @@ class RegisterView(View):
         user = UserProfile.objects.create(username=username,password=make_password(password),email=email,usercategory=usercategory)
         data['res'] = 200
         return JsonResponse(data)
-    
+
+'''
+用户退出
+'''
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return HttpResponsePermanentRedirect(reverse('index'))
+
 '''
 用户中心
 '''

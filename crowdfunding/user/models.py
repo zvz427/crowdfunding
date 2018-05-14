@@ -39,7 +39,7 @@ class UserCertify(models.Model):
                                            default='idcard_handler_img/default.png')
     email = models.EmailField(verbose_name='认证邮箱',default='')
     
-    user = models.ForeignKey(UserProfile,verbose_name='认证的用户',default=1)
+    user = models.ForeignKey(UserProfile,verbose_name='认证的用户')
     
     class Meta:
         verbose_name = '用户认证信息'

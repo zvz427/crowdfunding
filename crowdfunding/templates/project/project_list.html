@@ -217,7 +217,7 @@
                     {% for project in p_project.object_list %}
                         <div class="col-md-3">
                             <div class="thumbnail">
-                                <img alt="300x200" src="{% static project.project_img %}"/>
+                                <img alt="300x200" src="{{ project.main_img.url }}"/>
                                 <div class="caption">
                                     <h3 class="break">
                                         <a href="{% url 'project:project_detail' project_id=project.id %}">{{ project.name }}</a>
