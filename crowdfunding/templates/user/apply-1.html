@@ -58,16 +58,17 @@
 		  <li role="presentation"><a href="#"><span class="badge">4</span> 申请确认</a></li>
 		</ul>
         
-		<form role="form" style="margin-top:20px;">
+		<form role="form" style="margin-top:20px;" action="/user/usercertify_loadimg/" method="post" enctype="multipart/form-data">
 		  <div class="form-group">
 			<label for="exampleInputEmail1">手执身份证照片</label>
-			<input type="file" class="form-control" name="Filedata">
+			<input type="file" class="form-control" name="idcard_handler_img" id="idcard_handler_img">
             <br>
             <img src="{% static 'img/pic.jpg' %}">
 		  </div>
             {% csrf_token %}
           <button type="button" onclick="window.location.href='{% url 'user:usercertify_baseinfo' %}'" class="btn btn-default">上一步</button>
-		  <button type="button" id="btnSubmit"  class="btn btn-success">下一步</button>
+{#		  <button type="button" id="btnSubmit"  class="btn btn-success">下一步</button>#}
+            <input type="submit" class="btn btn-success" value="下一步">
 		</form>
 		<hr>
     </div> <!-- /container -->

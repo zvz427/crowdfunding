@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.base import View
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
-from project.models import ProjectInfo,RepayInfo,AccountNumInfo
+from project.models import ProjectInfo,RepayInfo,AccountNumInfo,Category,Tage
 import time
 from project.forms import UploadImageForm
 
@@ -22,6 +22,8 @@ class StartProView(View):
 '''
 class ProjectInfoView(View):
     def get(self, request):
+        tage_type = Tage.objects.all()
+        category_type = Category.objects.all()
         context = {
         }
         return render(request, 'startpro/start-step-1.html', context=context)
@@ -38,24 +40,10 @@ class ProjectInfoView(View):
         detail_intro = request.POST.get('detail_intro', '')
         mobile = request.POST.get('mobile', '')
         service_phone = request.POST.get('service_phone', '')
+        
+        # 直接使用request.FILES.get接收文件！！！！！！！！！！！！！！
         main_img = request.FILES.get('main_img')
         detail_img = request.FILES.get('detail_img')
-
-        
-        # # post方式上传文件
-        # main_img_name = str(int(time.time())) + request.FILES['main_img'].name
-        # main_img_content = request.FILES['main_img']
-        # with default_storage.open('MEDIA_ROOT'+'main_img/2018/05/'+main_img_name,'wb+') as f:
-        #     for chunk in main_img_content.chunks():
-        #         f.write(chunk)
-        #
-        # main_img = 'main_img/2018/05/'+main_img_name
-        # print('main_imgmain_imgmain_imgmain_img',main_img)
-        
-        # form 表单方式
-        # image_form = UploadImageForm(request.POST, request.FILES)
-        # if image_form.is_valid():
-        #     image_form.save()
         
         # 关联的外键需要增加当前用户的id！！！！
         proinfo = ProjectInfo.objects.create(
@@ -68,10 +56,9 @@ class ProjectInfoView(View):
         print('request.session[project_id]', request.session['project_id'])
         print(category_type, projectname, projectdesc, target_money, total_time, brief_intro, detail_intro,
               service_phone)
-        data['res'] = 200
-        # data['project_id'] = proinfo.id
-        return JsonResponse(data)
-
+        # data['res'] = 200
+        # return JsonResponse(data)
+        return redirect(reverse('startpro:projectrepay'))
 
 # '''
 # 项目信息
@@ -95,7 +82,7 @@ class ProjectInfoView(View):
 #         mobile = request.POST.get('mobile','')
 #         service_phone = request.POST.get('service_phone','')
 #
-#         # # post方式上传文件
+#         # # post方式上传文件失败？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 #         # main_img_name = str(int(time.time())) + request.FILES['main_img'].name
 #         # main_img_content = request.FILES['main_img']
 #         # with default_storage.open('MEDIA_ROOT'+'main_img/2018/05/'+main_img_name,'wb+') as f:
@@ -106,7 +93,7 @@ class ProjectInfoView(View):
 #         # print('main_imgmain_imgmain_imgmain_img',main_img)
 #
 #
-#         # form 表单方式
+#         # form 表单方式失败？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
 #         # image_form = UploadImageForm(request.POST, request.FILES)
 #         # if image_form.is_valid():
 #         #     image_form.save()
@@ -140,14 +127,15 @@ class ProjectRepayView(View):
     def post(self,request):
         data = dict()
         repay_type = request.POST.get('repay_type', '')
-        support_money = request.POST.get('support_money', '')
+        support_money = request.POST.get('support_money', 0)
         repay_content = request.POST.get('repay_content', '')
-        repay_num = request.POST.get('repay_num', '')
+        repay_num = request.POST.get('repay_num', 0)
         is_limit_buy = request.POST.get('is_limit_buy', '')
-        limit_buy_num = request.POST.get('limit_buy_num', '')
-        freight = request.POST.get('freight', '')
+        limit_buy_num = request.POST.get('limit_buy_num', 0)
+        freight = request.POST.get('freight', 0)
         receipt = request.POST.get('receipt', '')
-        repay_time = request.POST.get('repay_time', '')
+        repay_time = request.POST.get('repay_time', 0)
+        repay_img = request.FILES.get('repay_img','')
     
         print('request.session[project_id]----------------------',request.session['project_id'])
 
@@ -155,15 +143,14 @@ class ProjectRepayView(View):
         repayinfo = RepayInfo.objects.create(
             type=repay_type,support_money=support_money,repay_content=repay_content,
             repay_num=repay_num,is_limit_buy=is_limit_buy,limit_buy_num=limit_buy_num,
-            freight=freight,receipt=receipt,repay_time=repay_time,
+            freight=freight,receipt=receipt,repay_time=repay_time,repay_img=repay_img,
             project_id=request.session['project_id'],
             # project_id=6,
-            
         )
-    
-        data['res'] = 200
-        # 每添加一条回报信息，应该在页面加入table表的元素，并且可以编辑回报内容未完成？？？？？？？？？？？？？？？？？？？？？？？？、
-        return JsonResponse(data)
+        return render(request,'startpro/start-step-3.html',)
+        # data['res'] = 200
+        # # 每添加一条回报信息，应该在页面加入table表的元素，并且可以编辑回报内容未完成？？？？？？？？？？？？？？？？？？？？？？？？、
+        # return JsonResponse(data)
 
 '''
 收款账号信息
@@ -186,7 +173,6 @@ class AccountInfoView(View):
             company_num=company_num,id_card=id_card,user=request.user,
             project_id=request.session['project_id'],
         )
-    
         data['res'] = 200
         return JsonResponse(data)
     

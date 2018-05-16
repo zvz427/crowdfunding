@@ -17,11 +17,18 @@ TAGE_TYPE = {
     'computer': '电脑',
     'digital': '数码',
 }
-# 项目状态
+# 项目众筹状态
 ACTIVE_STATUS = {
     '0': '即将开始',
     '1': '众筹中',
     '2': '众筹成功',
+}
+
+# 项目审核状态
+CHECK_STATUS = {
+    '0': '审核中',
+    '1': '审核通过',
+    '2': '审核未通过',
 }
 
 # '''
@@ -31,12 +38,31 @@ ACTIVE_STATUS = {
 #     type = models.CharField(max_length=20,verbose_name='项目分类', default='technology')
 
 '''
+项目分类属性
+'''
+class Category(models.Model):
+    category_type = models.CharField(max_length=20, verbose_name='项目分类', default='科技')
+
+    class Meta:
+        verbose_name = '项目分类属性表'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.category_type
+    
+    
+'''
 项目信息
 '''
 class ProjectInfo(models.Model):
-    category_type = ((key, value) for key, value in CATEGORY_TYPE.items())
-    tage_type = ((key, value) for key, value in TAGE_TYPE.items())
+    # category_type = ((key, value) for key, value in CATEGORY_TYPE.items())
+    # tage_type = ((key, value) for key, value in TAGE_TYPE.items())
     active_status = ((key, value) for key, value in ACTIVE_STATUS.items())
+    check_status = ((key, value) for key, value in CHECK_STATUS.items())
+
+    category_type = models.ForeignKey(Category,verbose_name='项目所属分类',default=1)
+    user = models.ForeignKey(UserProfile,verbose_name='发起项目的用户',default=1)
+
     
     name = models.CharField(max_length=50, default='项目1', verbose_name='众筹项目名字')
     desc = models.CharField(max_length=200, verbose_name='项目一句话简述')
@@ -45,16 +71,15 @@ class ProjectInfo(models.Model):
     raised_money = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='已筹金额',default=0)
     total_time = models.IntegerField(verbose_name='筹资天数', default=30)
     create_time = models.DateField(auto_now_add=True,verbose_name='创建日期')
-    category = models.CharField(max_length=20,choices=category_type, verbose_name='项目分类', default='technology')
-    tage = models.CharField(max_length=10,choices=tage_type, default='mobile', verbose_name='项目标签')
     
     main_img = models.ImageField(max_length=100, verbose_name='项目头图', upload_to='main_img/%Y/%m',
                                     default='main_img/default.png')
     detail_img = models.ImageField(max_length=100, verbose_name='项目详情', upload_to='detail_img/%Y/%m',
                                     default='detail_img/default.png')
-    # detail = models.HTML(verbose_name='产品详情')
     
-    active_status = models.CharField(max_length=10,choices=active_status, verbose_name='项目状态', default='0')
+    active_status = models.CharField(max_length=10,choices=active_status, verbose_name='项目众筹状态', default='0')
+    check_status = models.CharField(max_length=10,choices=check_status, verbose_name='项目审核状态', default='0')
+    is_del = models.BooleanField(default=True,verbose_name='标记删除')
     
     support_people = models.IntegerField(verbose_name='支持人数',default=0)
 
@@ -64,7 +89,6 @@ class ProjectInfo(models.Model):
     service_phone = models.CharField(max_length=11, verbose_name='客服电话',default='123')
     
     # initiator = models.ForeignKey(InitiatorInfo, verbose_name='项目发起人或机构')
-    user = models.ForeignKey(UserProfile,verbose_name='发起项目的用户',default=1)
     
     class Meta:
         verbose_name = '项目信息'
@@ -156,6 +180,20 @@ class UserFavProject(models.Model):
     def __str__(self):
         return '{0}{1}'.format(self.user.username, self.project.name)
 
+'''
+项目标签属性
+'''
+class Tage(models.Model):
+    tage_type = models.CharField(max_length=10, default='手机', verbose_name='项目标签')
+    project = models.ManyToManyField(ProjectInfo,verbose_name='项目',default=1)
+
+
+    class Meta:
+        verbose_name = '项目标签属性表'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.tage_type
 
 # '''
 # 发起人或机构信息

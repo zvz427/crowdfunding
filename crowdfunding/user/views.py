@@ -208,13 +208,17 @@ class UserCertifyLoadImgView(View):
         return render(request,'user/apply-1.html')
     def post(self,request):
         data = dict()
-        file = request.FILES.get("Filedata", None)
+        # 简单实现文件上传的保存
+        idcard_handler_img = request.FILES.get("idcard_handler_img")
         usercetify = UserCertify.objects.get(user=request.user)
+        usercetify.idcard_handler_img = idcard_handler_img
+        usercetify.save()
         #保存图片在静态文件的目录下
         #将文件路径保存到数据库中————————————未实现？？？？？？？？？？？？
         print('假装文件已保存')
-        data['res'] = 200
-        return JsonResponse(data)
+        # data['res'] = 200
+        # return JsonResponse(data)
+        return redirect(reverse('user:usercertify_email'))
     
 '''
 用户认证邮箱信息

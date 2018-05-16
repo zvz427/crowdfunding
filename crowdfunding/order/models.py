@@ -8,7 +8,9 @@ from datetime import datetime
 回报订单信息
 '''
 class OrderInfo(models.Model):
+    # 外键都关联user会混乱？？？？？？？需要先创建地址表
     address = models.ForeignKey(UserAddress,verbose_name='订单的收货地址',default=1)
+    
     repayinfo = models.ForeignKey(RepayInfo,verbose_name='订单的购买回报信息',default='')
     user = models.ForeignKey(UserProfile,verbose_name='订单用户')
 

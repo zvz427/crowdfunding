@@ -306,7 +306,7 @@
             freight = parseInt(freight)
             total_price = support_money * repay_count
             // 设置商品总价
-            $('.total').find('em').text(total_price.toFixed(2))
+            $('.total').find('em').text((total_price+freight).toFixed(2))
         }
         // 手动输入
         $('.num_show').blur(function () {
