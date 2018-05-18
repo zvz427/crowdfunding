@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.base import View
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
-from project.models import ProjectInfo,RepayInfo,AccountNumInfo,Category,Tage
+from project.models import ProjectInfo,RepayInfo,AccountNumInfo,Category,TageOne
 import time
 from project.forms import UploadImageForm
 
@@ -22,7 +22,7 @@ class StartProView(View):
 '''
 class ProjectInfoView(View):
     def get(self, request):
-        tage_type = Tage.objects.all()
+        tage_type = TageOne.objects.all()
         category_type = Category.objects.all()
         context = {
         }

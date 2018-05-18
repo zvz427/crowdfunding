@@ -181,15 +181,32 @@ class UserFavProject(models.Model):
         return '{0}{1}'.format(self.user.username, self.project.name)
 
 '''
-项目标签属性
+项目一级标签属性
 '''
-class Tage(models.Model):
-    tage_type = models.CharField(max_length=10, default='手机', verbose_name='项目标签')
+class TageOne(models.Model):
+    tage_type = models.CharField(max_length=10, default='手机', verbose_name='项目一级标签')
     project = models.ManyToManyField(ProjectInfo,verbose_name='项目',default=1)
 
 
     class Meta:
-        verbose_name = '项目标签属性表'
+        verbose_name = '项目一级标签属性'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.tage_type
+    
+    
+'''
+项目二级标签属性
+'''
+class TageTwo(models.Model):
+    tage_type = models.CharField(max_length=10, default='贴膜', verbose_name='项目二级标签')
+    tage_parent = models.ForeignKey(TageOne,verbose_name='父级标签')
+    project = models.ManyToManyField(ProjectInfo,verbose_name='项目',default=1)
+
+
+    class Meta:
+        verbose_name = '项目二级标签属性'
         verbose_name_plural = verbose_name
 
     def __str__(self):
